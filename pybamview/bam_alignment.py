@@ -169,7 +169,7 @@ class AlignmentGrid(object):
         if self.pos < 0: self.pos = 0
         self.usesamples = _samples
         self.samples = list(set(
-            chain.from_iterable(rg.itervalues() for rg in _read_groups)))
+            chain.from_iterable(rg.values() for rg in _read_groups)))
         for item in _samples:
             if item not in self.samples: sys.stderr.write("WARNING: %s not in BAM\n"%item)
         if len(_samples) > 0:
@@ -340,7 +340,7 @@ class AlignmentGrid(object):
         Return string for the reference track
         """
         if len(self.grid_by_sample.keys()) == 0: return "N"*self.settings["LOADCHAR"]
-        refseries = self.grid_by_sample.values()[0]["reference"]
+        refseries = next(iter(self.grid_by_sample.values()))["reference"]
         reference = ""
         for i in range(len(refseries)):
             reference = reference + refseries[i]
@@ -349,7 +349,7 @@ class AlignmentGrid(object):
     def GetPositions(self, _pos):
         positions = []
         if len(self.grid_by_sample.keys()) == 0: return range(self.pos, self.pos+self.settings["LOADCHAR"])
-        refseries = self.grid_by_sample.values()[0]["reference"]
+        refseries = next(iter(self.grid_by_sample.values()))["reference"]
         for i in range(len(refseries)):
             positions.extend([self.pos+i]*len(refseries[i]))
         return positions
